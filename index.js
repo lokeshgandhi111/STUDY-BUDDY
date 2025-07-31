@@ -293,6 +293,9 @@ app.get('/dashboard', async (req, res) => {
     });
   }
 });
+app.get('/model-papers', (req, res) => {
+  res.render('modelpapers')
+});
 
 app.get('/subjects', async (req, res) => {
   try {
@@ -639,7 +642,6 @@ app.post('/api/resources', async (req, res) => {
     res.status(500).json({ error: 'Failed to create resource' });
   }
 });
-
 // ======================== ERROR HANDLERS ========================
 
 app.use((err, req, res, next) => {

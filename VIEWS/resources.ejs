@@ -427,21 +427,31 @@
       <select id="yearSelect">
         <option value="">All Years</option>
         <option value="1">1st Year</option>
-        <option value="2">2nd Year</option>
+        <!-- <option value="2">2nd Year</option>
         <option value="3">3rd Year</option>
-        <option value="4">4th Year</option>
+        <option value="4">4th Year</option> -->
       </select>
 
       <label for="semSelect">Semester:</label>
       <select id="semSelect">
         <option value="">All Semesters</option>
-        <option value="1">1st Semester</option>
-        <option value="2">2nd Semester</option>
+        <!-- <option value="1">1st Semester</option>
+        <option value="2">2nd Semester</option> -->
       </select>
 
       <label for="subjectSelect">Subject:</label>
       <select id="subjectSelect">
         <option value="">All Subjects</option>
+          <option value="CP">CP</option>
+          <option value="CHEMISTRY">CHEMISTRY</option>
+          <option value="M1">M1</option>
+          <option value="ENGLISH">ENGLISH</option>
+          <option value="BCME">BCME</option>
+          <option value="PHYSICS">PHYSICS</option>
+          <option value="BEEE">BEEE</option>
+          <option value="M2">M2</option>
+          <option value="EG">EG</option>
+          <option value="DS">DS</option>
       </select>
     </div>
 
@@ -463,67 +473,85 @@
     </div>
   </div>
 
-  <script>
-    const branchSelect = document.getElementById("branchSelect");
-    const yearSelect = document.getElementById("yearSelect");
+   <script>
+    // 1st Year Resources Data
+    const studyData = [
+      // Semester 1 Subjects
+      {
+        topic: "CP - Introduction to Programming",
+        subject: "CP",
+        semester: "1",
+        link: "https://drive.google.com/drive/folders/1I84yss-R6H1yycevJs4IakOOvJj06tC7"
+      },
+      {
+        topic: "ENGINEERING CHEMISTRY",
+        subject: "CHEMISTRY",
+        semester: "1",
+        link: "https://drive.google.com/drive/folders/1x8aqv1rAv9wToz8aK-okhB9a2EtFxWzh"
+      },
+      {
+        topic: "M1 - LA&C",
+        subject: "M1",
+        semester: "1",
+        link: "https://drive.google.com/m1-1"
+      },
+      {
+        topic: "ENGLISH - Communication Skills",
+        subject: "ENGLISH",
+        semester: "1",
+        link: "https://drive.google.com/eng1"
+      },
+      {
+        topic: "BCME - Basic Civil Engineering",
+        subject: "BCME",
+        semester: "1",
+        link: "https://drive.google.com/drive/folders/1akjLn7bGY2TBn0FwgTrRp0sIo8hH9DL3"
+      },
+      {
+        topic: "PHYSICS",
+        subject: "PHYSICS",
+        semester: "1",
+        link: "https://drive.google.com/drive/folders/14LG1AYcB7h5TxOPFKjhmyrUGhRAAhK1H"
+      },
+      
+      // Semester 2 Subjects
+      {
+        topic: "BEEE",
+        subject: "BEEE",
+        semester: "2",
+        link: "https://drive.google.com/drive/folders/1r4JVeKXn1CRDpCTdMd7p33D1l8Gzc6S0"
+      },
+      {
+        topic: "M2 - DEVC",
+        subject: "M2",
+        semester: "2",
+        link: "https://drive.google.com/m2-1"
+      },
+      {
+        topic: "EG - Engineering Graphics",
+        subject: "EG",
+        semester: "2",
+        link: "https://drive.google.com/eg2"
+      },
+      {
+        topic: "DS - Data Structures",
+        subject: "DS",
+        semester: "2",
+        link: "https://drive.google.com/drive/folders/1rRS0Je2Hxj5WJOkRlCOFGOdYTuumrmZj"
+      },
+    ];
+
+    // DOM Elements
     const semSelect = document.getElementById("semSelect");
     const subjectSelect = document.getElementById("subjectSelect");
     const resourcesContainer = document.getElementById("resourcesContainer");
 
-    function populateDropdown(select, options) {
-      select.innerHTML = '<option value="">All</option>';
-      options.forEach(option => {
-        const opt = document.createElement("option");
-        opt.value = option;
-        opt.textContent = option;
-        select.appendChild(opt);
-      });
-    }
-
-    function getUniqueValues(data, key) {
-      return [...new Set(data.map(item => item[key]).filter(Boolean))];
-    }
-
-    populateDropdown(branchSelect, getUniqueValues(studyData, "branch"));
-    populateDropdown(yearSelect, getUniqueValues(studyData, "year"));
-    populateDropdown(semSelect, getUniqueValues(studyData, "semester"));
-
-    function updateFilters() {
-      const branch = branchSelect.value;
-      const year = yearSelect.value;
-      const sem = semSelect.value;
-
-      const filteredSubjects = [...new Set(
-        studyData
-          .filter(item =>
-            (!branch || item.branch === branch) &&
-            (!year || item.year === year) &&
-            (!sem || item.semester === sem)
-          )
-          .map(item => item.subject)
-          .filter(Boolean)
-      )];
-
-      subjectSelect.innerHTML = '<option value="">All Subjects</option>';
-      filteredSubjects.forEach(subject => {
-        const option = document.createElement("option");
-        option.value = subject;
-        option.textContent = subject;
-        subjectSelect.appendChild(option);
-      });
-
-      renderResources();
-    }
-
     function renderResources() {
-      const branch = branchSelect.value;
-      const year = yearSelect.value;
       const sem = semSelect.value;
       const subject = subjectSelect.value;
 
+      // Filter resources
       const filtered = studyData.filter(item =>
-        (!branch || item.branch === branch) &&
-        (!year || item.year === year) &&
         (!sem || item.semester === sem) &&
         (!subject || item.subject === subject)
       );
@@ -531,7 +559,13 @@
       resourcesContainer.innerHTML = "";
 
       if (filtered.length === 0) {
-        resourcesContainer.innerHTML = "<p>No matching resources found.</p>";
+        resourcesContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-search"></i>
+            <p>No resources match your selected filters</p>
+            <p class="note">Please try different filter combinations</p>
+          </div>
+        `;
         return;
       }
 
@@ -543,8 +577,7 @@
           <h3>${item.topic}</h3>
           <div class="meta">
             <span><i class="fas fa-book"></i> ${item.subject}</span>
-            <span><i class="fas fa-code-branch"></i> ${item.branch}</span>
-            <span><i class="fas fa-calendar-alt"></i> Year ${item.year}, Sem ${item.semester}</span>
+            <span><i class="fas fa-calendar-alt"></i> Semester ${item.semester}</span>
           </div>
           <div class="actions">
             <a class="btn btn-primary" href="${item.link}" target="_blank">
@@ -557,12 +590,13 @@
       });
     }
 
-    branchSelect.addEventListener("change", updateFilters);
-    yearSelect.addEventListener("change", updateFilters);
-    semSelect.addEventListener("change", updateFilters);
+    // Event listeners
+    semSelect.addEventListener("change", renderResources);
     subjectSelect.addEventListener("change", renderResources);
 
-    updateFilters();
+    // Initialize
+    renderResources();
   </script>
+
 </body>
 </html>
